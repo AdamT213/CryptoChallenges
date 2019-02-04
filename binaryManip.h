@@ -17,7 +17,7 @@ class binaryManip {
     base64.append(writePadChars,'=');
     
     return base64;
-  } 
+  }
 
     char binaryToHex(string bin) { 
     if (bin == "0000") return '0'; 
