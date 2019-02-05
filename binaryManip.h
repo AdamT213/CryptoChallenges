@@ -3,23 +3,20 @@
 #include <boost/archive/iterators/transform_width.hpp>
 #include <boost/archive/iterators/insert_linebreaks.hpp>
 
-using namespace boost::archive::iterators;
-using namespace std;
-
 class binaryManip { 
   public:
   
-  string binaryToBase64(string text) { 
+  std::string binaryToBase64(std::string text) { 
   
-    typedef insert_linebreaks<base64_from_binary<transform_width<string::const_iterator,6, 1>>, 64> it_base64_t;
+    typedef boost::archive::iterators::insert_linebreaks<boost::archive::iterators::base64_from_binary<boost::archive::iterators::transform_width<std::string::const_iterator,6, 1>>, 64> it_base64_t;
     unsigned int writePadChars = (3-text.length()%3)%3;
-    string base64(it_base64_t(text.begin()),it_base64_t(text.end()));
+    std::string base64(it_base64_t(text.begin()),it_base64_t(text.end()));
     base64.append(writePadChars,'=');
     
     return base64;
   }
 
-    char binaryToHex(string bin) { 
+    char binaryToHex(std::string bin) { 
     if (bin == "0000") return '0'; 
     else if (bin == "0001") return '1';
     else if (bin == "0010") return '2';
