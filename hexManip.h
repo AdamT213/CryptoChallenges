@@ -9,7 +9,7 @@ class hexManip {
 
     std::string bin;
 
-    for (char c: text) { 
+    for (char c: text) {
       bin += hexToBin[c];
     }
     return bin;

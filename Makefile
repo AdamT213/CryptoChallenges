@@ -16,7 +16,12 @@ main: main.cpp binaryManip.h hexManip.h chiSquared.h
 1.5: repeating_key_xor.cpp binaryManip.h 
 	g++ -std=c++11 -c repeating_key_xor.cpp 
 	g++ -std=c++11 repeating_key_xor.o -o 1.5.o 
-	./1.5.o
+	./1.5.o 
+
+1.6: break_vigenere_cipher.cpp binaryManip.h informationTheory.h
+	g++ -std=c++11 -c break_vigenere_cipher.cpp
+	g++ -std=c++11 break_vigenere_cipher.o -o 1.6.o 
+	./1.6.o
 
 clean:
 	rm *.o *.out 1.*

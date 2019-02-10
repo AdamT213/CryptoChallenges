@@ -47,5 +47,5 @@ class chiSquared {
 
     return Q;
 
-  }
+  } 
 };

@@ -1,7 +1,9 @@
 #include <string> 
 #include <boost/archive/iterators/base64_from_binary.hpp>
+#include <boost/archive/iterators/binary_from_base64.hpp>
 #include <boost/archive/iterators/transform_width.hpp>
 #include <boost/archive/iterators/insert_linebreaks.hpp>
+#include <boost/archive/iterators/remove_whitespace.hpp>
 
 class binaryManip { 
   public:
@@ -14,6 +16,17 @@ class binaryManip {
     base64.append(writePadChars,'=');
     
     return base64;
+  }
+
+  std::string base64ToBinary(std::string text) { 
+  
+    typedef boost::archive::iterators::transform_width<boost::archive::iterators::binary_from_base64<boost::archive::iterators::remove_whitespace<std::string::const_iterator> >, 8, 6 >it_binary_t;
+    unsigned int paddChars = count(text.begin(), text.end(), '=');
+    std::replace(text.begin(),text.end(),'=','A');
+    std::string binary(it_binary_t(text.begin()),it_binary_t(text.end()));
+    binary.erase(binary.end()-paddChars,binary.end());
+    
+    return binary;
   }
 
     char binaryToHex(std::string bin) { 
