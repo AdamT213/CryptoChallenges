@@ -30,7 +30,7 @@ int hammingDistance(std::string s1, std::string s2) {
   for(int i =0; i<bin1.size(); ++i) { 
    bool b = bin1[i] ^ bin2[i];  
    if (b) { 
-     distance++;
+     ++distance;
    }
   }
   return distance;

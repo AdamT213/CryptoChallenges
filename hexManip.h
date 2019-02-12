@@ -1,5 +1,8 @@
 #include <map>
 #include <string>
+#include <sstream>
+#include <bitset>
+#include <iostream>
 
 class hexManip { 
   public:
@@ -13,5 +16,20 @@ class hexManip {
       bin += hexToBin[c];
     }
     return bin;
-  } 
+  }
+
+  std::string hexDecode(std::string text)  { 
+    std::string bin = hexToBinary(text);
+    std::stringstream ssResult(bin);
+    std::string output;
+
+    while(ssResult.good()) { 
+      std::bitset<8> bits;
+      ssResult >> bits;
+      char c = char(bits.to_ulong());
+      output += c;
+    }
+    std::cout << output << std::endl;
+    return output;
+    }
 };
