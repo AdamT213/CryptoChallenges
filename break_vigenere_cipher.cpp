@@ -125,6 +125,6 @@ int main()
   string hex = break_vigenere_cipher(text);
   cout << hexifier.hexDecode(hex); 
   binaryManip manipulator;
-  string bin = manipulator.base64ToBinary(text);  
+  string bin = manipulator.base64ToBinary(text); 
   
 }

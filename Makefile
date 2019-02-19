@@ -16,7 +16,16 @@
 1.6: break_vigenere_cipher.cpp binaryManip.h informationTheory.h
 	g++ -std=c++11 -c break_vigenere_cipher.cpp
 	g++ -std=c++11 break_vigenere_cipher.o -o 1.6.o 
-	./1.6.o
+	./1.6.o 
 
+1.7: decrypt_AES_in_ECBmode.cpp  binaryManip.h
+	g++ -Wall -std=c++11 -c decrypt_AES_in_ECBmode.cpp
+	g++ -Wall -std=c++11 decrypt_AES_in_ECBmode.o -o  1.7.o -lcrypto
+	./1.7.o
+
+1.8: detect_AES_in_ECBmode.cpp  
+	g++ -Wall -std=c++11 -c detect_AES_in_ECBmode.cpp
+	g++ -Wall -std=c++11 detect_AES_in_ECBmode.cpp -o  1.8.o -lcrypto
+	./1.8.o
 clean:
 	rm *.o *.out 1.*

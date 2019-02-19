@@ -43,6 +43,7 @@
     "typeindex": "cpp",
     "typeinfo": "cpp",
     "utility": "cpp",
-    "memory": "cpp"
+    "memory": "cpp",
+    "cstdarg": "cpp"
   }
 }
