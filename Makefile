@@ -27,5 +27,16 @@
 	g++ -Wall -std=c++11 -c detect_AES_in_ECBmode.cpp
 	g++ -Wall -std=c++11 detect_AES_in_ECBmode.cpp -o  1.8.o -lcrypto
 	./1.8.o
+
+2.9: PKCS7.cpp 
+	g++ -Wall -std=c++11 -c PKCS7.cpp
+	g++ -Wall -std=c++11 PKCS7.cpp -o  2.9.o 
+	./2.9.o
+
+2.10: CBC_by_hand.cpp
+	g++ -Wall -std=c++11 -c CBC_by_hand.cpp
+	g++ -Wall -std=c++11 CBC_by_hand.o -o  2.10.o -lcrypto
+	./2.10.o
+	
 clean:
-	rm *.o *.out 1.*
+	rm *.o *.out 1.* 2.*

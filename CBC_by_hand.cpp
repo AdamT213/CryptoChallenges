@@ -74,65 +74,57 @@ typedef basic_string<char, char_traits<char>, zallocator<char> > secure_string;
 using EVP_CIPHER_CTX_free_ptr = unique_ptr<EVP_CIPHER_CTX, decltype(&::EVP_CIPHER_CTX_free)>;  
 
 void gen_params(byte iv[BLOCK_SIZE]);
-void aes_decrypt(const unsigned char* key, const byte iv[BLOCK_SIZE], const secure_string& ctext, secure_string& rtext);
+void aes_encrypt(const unsigned char* key, const byte iv[BLOCK_SIZE], const secure_string& ptext, secure_string& ctext);
 
-string readfileAsString(const string& path)
-{
-  string buffer;
-  ifstream infile(path);
-  string line;
-
-  while (getline(infile, line))
-  {
-    buffer += line;
-  }
-  return buffer;
-}
-
-void aes_decrypt(const unsigned char* key, const byte iv[BLOCK_SIZE], const string& ctext, secure_string& rtext) 
+void aes_encrypt(const unsigned char* key, const byte iv[BLOCK_SIZE], const string& ptext, secure_string& ctext) 
 {
      EVP_CIPHER_CTX_free_ptr ctx(EVP_CIPHER_CTX_new(), ::EVP_CIPHER_CTX_free);
-    int rc = EVP_DecryptInit_ex(ctx.get(), EVP_aes_128_ecb(), NULL, key, iv);
+    int rc = EVP_EncryptInit_ex(ctx.get(), EVP_aes_128_ecb(), NULL, key, iv);
     if (rc != 1)
-      throw runtime_error("EVP_DecryptInit_ex failed");
+      throw runtime_error("EVP_EncryptInit_ex failed");
 
-      // Recovered text contracts upto BLOCK_SIZE
-    rtext.resize(ctext.size());
-    int out_len1 = (int)rtext.size();
+     // Cipher text expands up to BLOCK_SIZE
+    ctext.resize(ptext.size() +BLOCK_SIZE);
+    int out_len1 = (int)ctext.size();
 
-    rc = EVP_DecryptUpdate(ctx.get(), (byte*)&rtext[0], &out_len1, (byte*)&ctext[0] , (int)ctext.size());
+    rc = EVP_EncryptUpdate(ctx.get(), (byte*)&ctext[0], &out_len1, (byte*)&ptext[0] , (int)ptext.size());
     if (rc != 1)
-      throw runtime_error("EVP_DecryptUpdate failed");
+      throw runtime_error("EVP_EncryptUpdate failed");
   
-      int out_len2 = (int)rtext.size() - out_len1;
-    rc = EVP_DecryptFinal_ex(ctx.get(), (byte*)&rtext[0]+out_len1, &out_len2);
+      int out_len2 = (int)ctext.size() - out_len1;
+    rc = EVP_EncryptFinal_ex(ctx.get(), (byte*)&ctext[0]+out_len1, &out_len2);
     if (rc != 1)
-      throw runtime_error("EVP_DecryptFinal_ex failed");
+      throw runtime_error("EVP_EncryptFinal_ex failed");
     
-    // Set recovered text size now that we know it
-    rtext.resize(out_len1 + out_len2);
+    // Set cipher text size now that we know it
+    ctext.resize(out_len1 + out_len2);
 }
 
 int main()
 {
 
-  binaryManip manipulator; 
-  // string text = readfileAsString("../../../Downloads/ECBencrypted.txt");
-  string text = ")�n�A���Jey�H���Z��#��!�řM�j�����)���t@J �<���}Sh�S�ZM��ٖ�|\"�û��j��5�J�_�㲶>�Tb6�Ȥ����A;_j�����=R~����)�I��Z�����ܛ�C�5ë��;kQ�����|ਖ਼54&E���*�	�ґ2I��c}�O&���������?����E�b�0$�m=�>qm�!~�30}H�1du���l�B����A;�l��!T�ɥ}B��|�����S@���1��<et?Z�R�Nd5�*1B��k�~��H��'��p�O�����K��Z��o);I�w�yD�?�����P���[�b(�Alβpv��Ā��e�~��A�0H;ڂ%3��@q�*;�B2�o�-���!,,�Q����6��|����Ȅ;�'	]�G�!3h!�T�j��(�";
-  string bin = manipulator.base64ToBinary(text);
+  string ptext = "A nigga like me man, I love the game, I love the hustle man I be feeling like one of them ball player niggas you know Like Bird, Magic or something Yeah you know a nigga got dough, a nigga can leave the league But if I leave… the fans still gone love me man? I get love out here in harlem man I done sold coke on these streets man hash weed, heroine As long as niggas is feeling it, a nigga like me could hustle it That’s my gift in life A… you know?";
     
     // Load the necessary cipher
+    unsigned char ciphertext[512];
     EVP_add_cipher(EVP_aes_128_ecb());
-    secure_string rtext; 
+    secure_string ctext;
     byte iv[BLOCK_SIZE];
     gen_params(iv);
     unsigned char *key = (unsigned char *)"YELLOW SUBMARINE";
   
-    aes_decrypt(key, iv, bin, rtext);
-    
+    aes_encrypt(key, iv, ptext, ctext);
+
     OPENSSL_cleanse(iv, BLOCK_SIZE);
 
-    cout << "Recovered message:\n" << rtext << endl;
+    ofstream myfile;
+    myfile.open ("./ECBenc.txt");
+    myfile << ctext;
+    myfile.close();
+
+    // cout << "Encrypted message:\n" << ctext << endl;
+
+    // Check output using decrypt_AES_in_ECBmode to make sure it matches ptext
 
     return 0;
 }
